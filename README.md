@@ -1,3 +1,9 @@
+Req 2. Nicolas Camargo - 202020782 - n.camargop@uniandes.edu.co
+
+Req 3. Juan Manuel Pérez - 202021827 - Jm.perezs1@uniandes.edu.co
+
+
+
 #ISIS1225 - Librerias de soporte
 
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
