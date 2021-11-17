@@ -23,7 +23,7 @@
 import config as cf
 import sys
 import controller
-from DISClib.ADT import list as lt
+from DISClib.ADT import stack
 assert cf
 
 
@@ -34,13 +34,31 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("1- Inicializar Analizador")
+    print("2- Cargar información de aeropuertos y vuelos")
+    print("3- Encontrar puntos de interconexion áerea")
+    print("4- Encontrar clústeres de tráfico aéreo")
+    print("5- Encontrar la ruta más corta entre ciudades")
+    print("6- Utilizar las millas de viajero")
+    print("7- Cuantificar el efecto de un aeropuerto cerrado")
 
 catalog = None
 
+def optionTwo(cont):
+    ''''''
+def optionThree(cont):
+    ''''''
+def optionFour(cont):
+    ''''''
+def optionFive(cont):
+    ''''''
+def optionSix(cont):
+    ''''''
+def optionSeven(cont):
+    ''''''
 """
 Menu principal
 """
@@ -49,8 +67,26 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        cont=''
 
     elif int(inputs[0]) == 2:
+        optionTwo(cont)
+
+    elif int(inputs[0]) == 3:
+        optionThree(cont)
+
+    elif int(inputs[0]) == 4:
+        optionFour(cont)
+
+    elif int(inputs[0]) == 5:
+        optionFive(cont)
+
+    elif int(inputs[0]) == 6:
+        optionSix(cont)
+    
+    elif int(inputs[0]) == 7:
+        optionSeven(cont)
+        
         pass
 
     else:
