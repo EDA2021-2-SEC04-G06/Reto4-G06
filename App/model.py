@@ -29,6 +29,7 @@ import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+from DISClib.ADT.graph import gr
 from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
 
@@ -39,12 +40,57 @@ los mismos.
 
 # Construccion de modelos
 
+def newAnalyzer():
+    analyzer = {'mapaAeropuertos': None,
+                'mapaCiudades': None,
+                'digrafo': None,
+                'grafoDirigido': None}
+
+    analyzer['mapaAeropuertos'] = mp.newMap(numelements=9075, maptype='PROBING')
+
+    analyzer['mapaCiudades'] = mp.newMap(numelements=41001, maptype='PROBING')
+
+    analyzer['digrafo'] = gr.newGraph(datastructure='ADJ_LIST',
+                                        directed=True,size=9076,
+                                        comparefunction=compareIATA)
+
+    '''analyzer['grafoDirigido'] = gr.newGraph(datastructure='ADJ_LIST',
+                                            directed=False,
+                                            size=)'''
+    return analyzer
+
 # Funciones para agregar informacion al catalogo
+
+def addVertex(analyzer, airport):
+    iata = airport['IATA']
+    if not gr.containsVertex(analyzer['digrafo'], iata):
+        gr.insertVertex(analyzer['digrafo'], iata)
+    return analyzer
+    
+
+def addRutaConexion(analyzer, ruta):
+    origen = ruta['Departure']
+    llegada = ruta['Destination']
+    distancia = ruta['distance_km']
+    gr.addEdge(analyzer['digrafo'],origen,llegada,distancia)
+
 
 # Funciones para creacion de datos
 
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+def compareIATA(iata, keyvalueIata):
+    """
+    Compara dos estaciones
+    """
+    iatacode = keyvalueIata['key']
+    if (iata == iatacode):
+        return 0
+    elif (iata > iatacode):
+        return 1
+    else:
+        return -1
 
 # Funciones de ordenamiento

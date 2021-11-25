@@ -24,6 +24,8 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import stack
+from DISClib.ADT.graph import gr
+import threading
 assert cf
 
 
@@ -34,9 +36,12 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+airportsfile = 'airports_full.csv'
+routesfile = 'routes_full.csv'
+
 
 def printMenu():
-    print("Bienvenido")
+    print("\nBienvenido")
     print("1- Inicializar Analizador")
     print("2- Cargar información de aeropuertos y vuelos")
     print("3- Encontrar puntos de interconexion áerea")
@@ -45,10 +50,15 @@ def printMenu():
     print("6- Utilizar las millas de viajero")
     print("7- Cuantificar el efecto de un aeropuerto cerrado")
 
-catalog = None
 
 def optionTwo(cont):
-    ''''''
+    print("\nCargando información de aeropuertos")
+    controller. loadData(cont, airportsfile, routesfile)
+    aeropuertos = (gr.numVertices(cont['digrafo']))
+    rutas= (gr.numEdges(cont['digrafo']))
+    print('Total aeropuertos en el Digrafo: '+str(aeropuertos))
+    print('Total rutas aéreas en Digrafo: '+str(rutas))
+
 def optionThree(cont):
     ''''''
 def optionFour(cont):
@@ -62,33 +72,40 @@ def optionSeven(cont):
 """
 Menu principal
 """
-while True:
-    printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
-        cont=''
+def thread_cycle():
+    while True:
+        printMenu()
+        inputs = input('Seleccione una opción para continuar\n')
+        if int(inputs[0]) == 1:
+            print("\nInicializando....")
+            cont = controller.init()
 
-    elif int(inputs[0]) == 2:
-        optionTwo(cont)
+        elif int(inputs[0]) == 2:
+            optionTwo(cont)
 
-    elif int(inputs[0]) == 3:
-        optionThree(cont)
+        elif int(inputs[0]) == 3:
+            optionThree(cont)
 
-    elif int(inputs[0]) == 4:
-        optionFour(cont)
+        elif int(inputs[0]) == 4:
+            optionFour(cont)
 
-    elif int(inputs[0]) == 5:
-        optionFive(cont)
+        elif int(inputs[0]) == 5:
+            optionFive(cont)
 
-    elif int(inputs[0]) == 6:
-        optionSix(cont)
+        elif int(inputs[0]) == 6:
+            optionSix(cont)
     
-    elif int(inputs[0]) == 7:
-        optionSeven(cont)
+        elif int(inputs[0]) == 7:
+            optionSeven(cont)
         
-        pass
+            pass
 
-    else:
-        sys.exit(0)
+        else:
+            sys.exit(0)
+
+if __name__ == "__main__":
+    threading.stack_size(67108864)  # 64MB stack
+    sys.setrecursionlimit(2 ** 20)
+    thread = threading.Thread(target=thread_cycle)
+    thread.start()
 sys.exit(0)
