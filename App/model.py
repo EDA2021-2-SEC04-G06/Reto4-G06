@@ -40,19 +40,24 @@ los mismos.
 
 # Construccion de modelos
 
+
 def newAnalyzer():
     analyzer = {'mapaAeropuertos': None,
                 'mapaCiudades': None,
                 'digrafo': None,
-                'grafoDirigido': None}
+                'grafoDirigido': None,
+                'arrayCiudades': None}
 
-    analyzer['mapaAeropuertos'] = mp.newMap(numelements=9075, maptype='PROBING')
+    analyzer['arrayCiudades'] = lt.newList(datastructure='ARRAY_LIST')
+
+    analyzer['mapaAeropuertos'] = mp.newMap(
+        numelements=9075, maptype='PROBING')
 
     analyzer['mapaCiudades'] = mp.newMap(numelements=41001, maptype='PROBING')
 
     analyzer['digrafo'] = gr.newGraph(datastructure='ADJ_LIST',
-                                        directed=True,size=9076,
-                                        comparefunction=compareIATA)
+                                      directed=True, size=9076,
+                                      comparefunction=compareIATA)
 
     '''analyzer['grafoDirigido'] = gr.newGraph(datastructure='ADJ_LIST',
                                             directed=False,
@@ -61,25 +66,33 @@ def newAnalyzer():
 
 # Funciones para agregar informacion al catalogo
 
+
 def addVertex(analyzer, airport):
     iata = airport['IATA']
     if not gr.containsVertex(analyzer['digrafo'], iata):
         gr.insertVertex(analyzer['digrafo'], iata)
     return analyzer
-    
+
 
 def addRutaConexion(analyzer, ruta):
     origen = ruta['Departure']
     llegada = ruta['Destination']
     distancia = ruta['distance_km']
-    gr.addEdge(analyzer['digrafo'],origen,llegada,distancia)
+    gr.addEdge(analyzer['digrafo'], origen, llegada, distancia)
 
 
+def addCity(analyzer, ciudades):
+    city = ciudades['city_ascii']
+    pais = ciudades['country']
+    latitud = ciudades['lat']
+    longitud = ciudades['lng']
+    lt.addLast(analyzer['arrayCiudades'], city)
 # Funciones para creacion de datos
 
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
 
 def compareIATA(iata, keyvalueIata):
     """
@@ -94,3 +107,23 @@ def compareIATA(iata, keyvalueIata):
         return -1
 
 # Funciones de ordenamiento
+
+
+def req3(analyzer, ciudadOrigen, ciudadDestino):
+    cities = analyzer['arrayCiudades']
+    i = 0
+    while i <= lt.size(cities):
+        tempList = lt.newList(datastructure='ARRAY_LIST')
+        city = lt.getElement(cities, i)
+        pos = lt.isPresent(cities, city)
+        lt.addLast(tempList, city)
+        while pos != 0:
+            lt.deleteElement(cities, pos)
+            pos = lt.isPresent(cities, city)
+            city = lt.getElement(cities, pos)
+            lt.addLast(tempList, city)
+
+        mp.put(analyzer['mapaCiudades'], city, tempList)
+        i += 1
+
+    print(mp.get(analyzer['mapaCiudades'], 'Salamanca'))

@@ -31,23 +31,38 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 # Inicialización del Catálogo de libros
 
+
 def init():
     analyzer = model.newAnalyzer()
     return analyzer
 
 # Funciones para la carga de datos
 
-def loadData(analyzer, airportsfile, routesfile):
+
+def loadData(analyzer, airportsfile, routesfile, citiesfile):
     airportsfile = cf.data_dir + airportsfile
     routesfile = cf.data_dir + routesfile
-    inputFileAirport = csv.DictReader(open(airportsfile, encoding="utf-8"),delimiter=",")
-    inputFileRoutes = csv.DictReader(open(routesfile, encoding="utf-8"),delimiter=",")
+    citiesfile = cf.data_dir + citiesfile
+    inputFileAirport = csv.DictReader(
+        open(airportsfile, encoding="utf-8"), delimiter=",")
+    inputFileRoutes = csv.DictReader(
+        open(routesfile, encoding="utf-8"), delimiter=",")
+    inputFileCities = csv.DictReader(
+        open(citiesfile, encoding="utf-8"), delimiter=",")
 
     for airport in inputFileAirport:
-        model.addVertex(analyzer,airport)
+        model.addVertex(analyzer, airport)
 
     for ruta in inputFileRoutes:
         model.addRutaConexion(analyzer, ruta)
+
+    for city in inputFileCities:
+        model.addCity(analyzer, city)
+
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
+
+def req3(analyzer, ciudadOrigen, ciudadDestino):
+    model.req3(analyzer, ciudadOrigen, ciudadDestino)

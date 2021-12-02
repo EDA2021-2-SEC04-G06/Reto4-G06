@@ -25,6 +25,7 @@ import sys
 import controller
 from DISClib.ADT import stack
 from DISClib.ADT.graph import gr
+from DISClib.ADT import list as lt
 import threading
 assert cf
 
@@ -38,6 +39,7 @@ operación solicitada
 
 airportsfile = 'airports_full.csv'
 routesfile = 'routes_full.csv'
+citiesfile = 'worldcities.csv'
 
 
 def printMenu():
@@ -53,25 +55,40 @@ def printMenu():
 
 def optionTwo(cont):
     print("\nCargando información de aeropuertos")
-    controller. loadData(cont, airportsfile, routesfile)
+    controller. loadData(cont, airportsfile, routesfile, citiesfile)
     aeropuertos = (gr.numVertices(cont['digrafo']))
-    rutas= (gr.numEdges(cont['digrafo']))
+    rutas = (gr.numEdges(cont['digrafo']))
     print('Total aeropuertos en el Digrafo: '+str(aeropuertos))
     print('Total rutas aéreas en Digrafo: '+str(rutas))
 
+
 def optionThree(cont):
     ''''''
+
+
 def optionFour(cont):
     ''''''
+
+
 def optionFive(cont):
-    ''''''
+    ciudadOrigen = input('Ingrese el nombre de la ciudad de origen: ')
+    ciudadDestino = input('Ingrese el nombre de la ciudad de destino: ')
+    controller.req3(cont, ciudadOrigen, ciudadDestino)
+
+
 def optionSix(cont):
     ''''''
+
+
 def optionSeven(cont):
     ''''''
+
+
 """
 Menu principal
 """
+
+
 def thread_cycle():
     while True:
         printMenu()
@@ -94,14 +111,15 @@ def thread_cycle():
 
         elif int(inputs[0]) == 6:
             optionSix(cont)
-    
+
         elif int(inputs[0]) == 7:
             optionSeven(cont)
-        
+
             pass
 
         else:
             sys.exit(0)
+
 
 if __name__ == "__main__":
     threading.stack_size(67108864)  # 64MB stack
