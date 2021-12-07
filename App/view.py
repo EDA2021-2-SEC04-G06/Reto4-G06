@@ -30,6 +30,14 @@ from DISClib.ADT import list as lt
 import threading
 assert cf
 
+def printTotalCiudades(lista):
+    tamanho = lt.size(lista)
+    numero1 = lt.getElement(lista,1)
+    print('Primera Ciudad: '+ str(numero1['city_ascii']) + ' Pais: ' + str(numero1['country']) + ' Latitud: ' +str(numero1['lat']) + 
+            ' Longitud: ' + str(numero1['lng']) + ' Población: '+ str(numero1['population']))
+    numerof = lt.getElement(lista,tamanho)
+    print('Última Ciudad: '+ str(numerof['city_ascii']) + ' Pais: ' + str(numerof['country']) + ' Latitud: ' +str(numerof['lat']) + 
+            ' Longitud: ' + str(numerof['lng']) + ' Población: '+ str(numerof['population']))
 
 """
 La vista se encarga de la interacción con el usuario
@@ -62,6 +70,8 @@ def optionTwo(cont):
     print('Total aeropuertos en el Digrafo: '+str(aeropuertos))
     print('Total rutas aéreas en Digrafo: '+str(rutas))
 
+    print('\nTotal de Ciudades: ' + str(lt.size(cont['listaCiudades'])))
+    printTotalCiudades(cont['listaCiudades'])
 
 def optionThree(cont):
     ''''''
