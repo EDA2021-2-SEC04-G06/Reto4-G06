@@ -25,6 +25,7 @@ import sys
 import controller
 from DISClib.ADT import stack
 from DISClib.ADT.graph import gr
+from DISClib.ADT import map as mp
 from DISClib.ADT import list as lt
 import threading
 assert cf
@@ -37,9 +38,9 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
-airportsfile = 'airports_full.csv'
-routesfile = 'routes_full.csv'
-citiesfile = 'worldcities.csv'
+airportsfile = 'airports-utf8-small.csv'
+routesfile = 'routes-utf8-small.csv'
+citiesfile = 'worldcities-utf8.csv'
 
 
 def printMenu():

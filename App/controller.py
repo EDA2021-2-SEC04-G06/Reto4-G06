@@ -50,14 +50,17 @@ def loadData(analyzer, airportsfile, routesfile, citiesfile):
     inputFileCities = csv.DictReader(
         open(citiesfile, encoding="utf-8"), delimiter=",")
 
+    for city in inputFileCities:
+        model.addCity(analyzer, city)
+        model.addCiudad(analyzer, city)
+
     for airport in inputFileAirport:
+        model.addAirport(analyzer,airport)
         model.addVertex(analyzer, airport)
 
     for ruta in inputFileRoutes:
         model.addRutaConexion(analyzer, ruta)
 
-    for city in inputFileCities:
-        model.addCity(analyzer, city)
 
 # Funciones de ordenamiento
 

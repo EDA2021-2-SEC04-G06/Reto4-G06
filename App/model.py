@@ -25,6 +25,7 @@
  """
 
 
+from math import e
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -42,18 +43,25 @@ los mismos.
 
 
 def newAnalyzer():
-    analyzer = {'mapaAeropuertos': None,
+    analyzer = {'listaCiudades':None,
+                'mapaAeropuertos': None,
                 'mapaCiudades': None,
+                'mapCiudades':None,
                 'digrafo': None,
                 'grafoDirigido': None,
                 'arrayCiudades': None}
 
+    analyzer['listaCiudades'] = lt.newList(datastructure='ARRAY_LIST')
+
     analyzer['arrayCiudades'] = lt.newList(datastructure='ARRAY_LIST')
 
-    analyzer['mapaAeropuertos'] = mp.newMap(
-        numelements=9075, maptype='PROBING')
+    analyzer['mapaAeropuertosPorCiudadyPais'] = mp.newMap(maptype='PROBING',comparefunction=compareMapCity)
+
+    analyzer['mapaAeropuertosPorIATA'] = mp.newMap(maptype='PROBING',comparefunction=compareMapIATA)
 
     analyzer['mapaCiudades'] = mp.newMap(numelements=41001, maptype='PROBING')
+
+    analyzer['mapCiudades'] = mp.newMap(numelements=41001, maptype='PROBING',comparefunction=compareMapCity)
 
     analyzer['digrafo'] = gr.newGraph(datastructure='ADJ_LIST',
                                       directed=True, size=9076,
@@ -80,6 +88,54 @@ def addRutaConexion(analyzer, ruta):
     distancia = ruta['distance_km']
     gr.addEdge(analyzer['digrafo'], origen, llegada, distancia)
 
+def addCiudad(analyzer, city):
+    lt.addLast(analyzer['listaCiudades'],city)
+    mapaCiudades=analyzer['mapCiudades']
+    nombreCiudad = city['city_ascii']
+
+    existCity = mp.contains(mapaCiudades,nombreCiudad)
+    if existCity:
+        entry = mp.get(mapaCiudades,nombreCiudad)
+        ciudad_final = me.getValue(entry)
+        lt.addLast(ciudad_final[nombreCiudad],city)
+
+    else:
+        ciudad_final = newCity(nombreCiudad)
+        lt.addLast(ciudad_final[nombreCiudad],city)
+        mp.put(mapaCiudades,nombreCiudad,ciudad_final)
+
+
+def newCity(nombreCiudad):
+    entry = {nombreCiudad : None}
+    entry[nombreCiudad]=lt.newList('ARRAY_LIST')
+    return entry
+
+def addAirport(analyzer,airport):
+    iatas = analyzer['mapaAeropuertosPorIATA']
+    ciudades = analyzer['mapaAeropuertosPorCiudadyPais']
+    iata = airport['IATA']
+    ciudad =airport['City']
+
+    mp.put(iatas, iata, airport)
+
+    existCiudad = mp.contains(ciudades,ciudad)
+    if existCiudad:
+        entry = mp.get(ciudades,ciudad)
+        ciudadAeroFinal = me.getValue(entry)
+        lt.addLast(ciudadAeroFinal[ciudad],airport)
+
+    else:
+        ciudadAeroFinal = newCity2(ciudad)
+        lt.addLast(ciudadAeroFinal[ciudad],airport)
+        mp.put(ciudades,ciudad,ciudadAeroFinal)
+
+def newCity2(ciudad):
+    entry = {ciudad:None}
+    entry[ciudad] = lt.newList(datastructure='ARRAY_LIST')
+    return entry
+
+
+
 
 def addCity(analyzer, ciudades):
     city = ciudades['city_ascii']
@@ -87,6 +143,8 @@ def addCity(analyzer, ciudades):
     latitud = ciudades['lat']
     longitud = ciudades['lng']
     lt.addLast(analyzer['arrayCiudades'], city)
+
+
 # Funciones para creacion de datos
 
 # Funciones de consulta
@@ -102,6 +160,33 @@ def compareIATA(iata, keyvalueIata):
     if (iata == iatacode):
         return 0
     elif (iata > iatacode):
+        return 1
+    else:
+        return -1
+
+def compareMapIATA(keyIATA, IATAS):
+    IATAEntry = me.getKey(IATAS)
+    if keyIATA == IATAEntry:
+        return 0
+    elif keyIATA > IATAEntry:
+        return 1
+    else:
+        return -1
+
+def compareMapCountry(keyCountry, countries):
+    countryEntry = me.getKey(countries)
+    if keyCountry == countryEntry:
+        return 0
+    elif keyCountry > countryEntry:
+        return 1
+    else: 
+        return -1
+
+def compareMapCity(keyCity, cities):
+    cityEntry = me.getKey(cities)
+    if keyCity == cityEntry:
+        return 0
+    elif keyCity > cityEntry:
         return 1
     else:
         return -1
