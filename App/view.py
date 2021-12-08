@@ -74,11 +74,17 @@ def optionTwo(cont):
     printTotalCiudades(cont['listaCiudades'])
 
 def optionThree(cont):
-    ''''''
-
+    total = controller.req1(cont)
+    print(total)
+    print(mp.size(total))
+    print(total)
 
 def optionFour(cont):
-    ''''''
+    codigoIATA1 = input('Ingrese el código IATA del primer áeropuerto: ')
+    codigoIATA2 = input('Ingrese el código IATA del segundo áeropuerto: ')
+    total = controller.req2(cont, codigoIATA1, codigoIATA2)
+    print('\nNúmero total de clústeres presentes en la red de transporte aéreo: ' + str(total[0]['components']))
+    print('¿Estan '+total[2]+' ('+codigoIATA1+') y '+ total[3]+' ('+codigoIATA2+') conectados?: '+str(total[1]))
 
 
 def optionFive(cont):

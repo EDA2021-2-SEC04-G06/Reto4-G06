@@ -66,6 +66,12 @@ def loadData(analyzer, airportsfile, routesfile, citiesfile):
 
 # Funciones de consulta sobre el catálogo
 
+def req1(analyzer):
+    return model.req1(analyzer)
+
+def req2(analyzer, codigoIATA1, codigoIATA2):
+    return model.req2(analyzer,codigoIATA1,codigoIATA2)
+
 
 def req3(analyzer, ciudadOrigen, ciudadDestino):
     model.req3(analyzer, ciudadOrigen, ciudadDestino)

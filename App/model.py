@@ -31,6 +31,8 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.ADT.graph import gr
+from DISClib.Algorithms.Graphs import bfs as bfs
+from DISClib.Algorithms.Graphs import scc as scc
 from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
 
@@ -44,6 +46,7 @@ los mismos.
 
 def newAnalyzer():
     analyzer = {'listaCiudades':None,
+                'listaAeropuertos':None,
                 'mapaAeropuertos': None,
                 'mapaCiudades': None,
                 'mapCiudades':None,
@@ -52,6 +55,8 @@ def newAnalyzer():
                 'arrayCiudades': None}
 
     analyzer['listaCiudades'] = lt.newList(datastructure='ARRAY_LIST')
+
+    analyzer['listaAeropuertos'] = lt.newList(datastructure='ARRAY_LIST')
 
     analyzer['arrayCiudades'] = lt.newList(datastructure='ARRAY_LIST')
 
@@ -111,6 +116,7 @@ def newCity(nombreCiudad):
     return entry
 
 def addAirport(analyzer,airport):
+    lt.addLast(analyzer['listaAeropuertos'],airport)
     iatas = analyzer['mapaAeropuertosPorIATA']
     ciudades = analyzer['mapaAeropuertosPorCiudadyPais']
     iata = airport['IATA']
@@ -193,6 +199,20 @@ def compareMapCity(keyCity, cities):
 
 # Funciones de ordenamiento
 
+def req1(analyzer):
+    x=bfs.BreadhtFisrtSearch(analyzer['digrafo'],'UUS')
+    return x
+
+def req2(analyzer,codigoIATA1,codigoIATA2):
+    componentesFuertementeMapa = scc.KosarajuSCC(analyzer['digrafo'])
+    conectados = scc.stronglyConnected(componentesFuertementeMapa,codigoIATA1,codigoIATA2)
+    aeropuerto1 = mp.get(analyzer['mapaAeropuertosPorIATA'],codigoIATA1)
+    valorAeropuerto1 = me.getValue(aeropuerto1)
+    nombreAeropuerto1=valorAeropuerto1['Name']
+    aeropuerto2 = mp.get(analyzer['mapaAeropuertosPorIATA'],codigoIATA2)
+    valorAeropuerto2 = me.getValue(aeropuerto2)
+    nombreAeropuerto2=valorAeropuerto2['Name']
+    return componentesFuertementeMapa, conectados, nombreAeropuerto1, nombreAeropuerto2
 
 def req3(analyzer, ciudadOrigen, ciudadDestino):
     cities = analyzer['arrayCiudades']
