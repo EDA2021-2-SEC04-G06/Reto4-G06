@@ -266,29 +266,40 @@ def req2(analyzer,codigoIATA1,codigoIATA2):
     return componentesFuertementeMapa, conectados, nombreAeropuerto1, nombreAeropuerto2
 
 def req3(analyzer, ciudadOrigen, ciudadDestino):
-    ciudadesOrigen = mp.get(analyzer['mapCiudades'], ciudadOrigen)
+    ciudadesOrigen = mp.get(analyzer['mapaAeropuertosPorCiudadyPais'], ciudadOrigen)
     valuesOrigen = me.getValue(ciudadesOrigen)
+    listaOrigen = valuesOrigen[ciudadOrigen]
     print('\nPara la Ciudad de Origen: '+ciudadOrigen)
     i = 1
-    for ciudad in lt.iterator(valuesOrigen[ciudadOrigen]):
-        print(str(i) + '. Pais: '+ ciudad['country'] + ', Nombre Administrativo: ' + ciudad['admin_name'] + 
-                ', Capital: ' + ciudad['capital'] + ', Latitud: ' + ciudad['lat'] + ', Longitud: ' +ciudad['lng'])
+    for ciudad in lt.iterator(listaOrigen):
+        print(str(i) + '. Pais: '+ ciudad['Country'] + ', IATA: ' + ciudad['IATA'] + ', Latitud: ' + 
+                        ciudad['Latitude'] + ', Longitud: ' +ciudad['Longitude'])
         i+=1
-    numeroCiudadOrigen = input('Seleccione el número de la ciudad: ')
+    numeroCiudadOrigen = int(input('Seleccione el número de la ciudad: '))
 
     print('\nPara la Ciudad de Destino: '+ciudadDestino)
-    ciudadesDestino = mp.get(analyzer['mapCiudades'], ciudadDestino)
+    ciudadesDestino = mp.get(analyzer['mapaAeropuertosPorCiudadyPais'], ciudadDestino)
     valuesDestino = me.getValue(ciudadesDestino)
+    listaDestino = valuesDestino[ciudadDestino]
     i=1
-    for ciudad in lt.iterator(valuesDestino[ciudadDestino]):
-        print(str(i) + '. Pais: '+ ciudad['country'] + ', Nombre Administrativo: ' + ciudad['admin_name'] + 
-                ', Capital: ' + ciudad['capital'] + ', Latitud: ' + ciudad['lat'] + ', Longitud: ' +ciudad['lng'])
+    for ciudad in lt.iterator(listaDestino):
+        print(str(i) + '. Pais: '+ ciudad['Country'] + ', IATA: ' + ciudad['IATA'] + ', Latitud: ' + 
+                        ciudad['Latitude'] + ', Longitud: ' +ciudad['Longitude'])
         i+=1
 
-    numeroCiudadDestino = input('Seleccione el número de la ciudad: ')
+    numeroCiudadDestino = int(input('Seleccione el número de la ciudad: '))
+
+    infoOrigen = lt.getElement(listaOrigen,numeroCiudadOrigen)
+    infoDestino = lt.getElement(listaDestino,numeroCiudadDestino)
+
+    IATAOrigen = infoOrigen['IATA']
+    IATADestino = infoDestino['IATA']
+
+    x = dijsktra.Dijkstra(analyzer['digrafo'],IATAOrigen)
+    distancia = dijsktra.distTo(x, IATADestino)
+    print(distancia)
 
 
-    
 def req4(analyzer, codigoOrigen, millasViajero):
     x = bf.BellmanFord(analyzer['digrafo'],codigoOrigen)
     print(x)
