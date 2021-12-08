@@ -52,6 +52,51 @@ def printCamino(lista):
         texto = camino['vertexA']+' - '+camino['vertexB']
         print(texto + ', Distancia: '+ str(camino['weight'])+' (km)')
 
+def printPrimeros3(lista):
+    tamanho = lt.size(lista)
+    
+    if tamanho >= 3:
+        i=1
+        while i<=3:
+            airport = lt.getElement(lista,i)
+            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
+                    ', Pais: '+airport['Country'])
+            i+=1
+    elif tamanho == 2:
+        i=2
+        while i<=3:
+            airport = lt.getElement(lista,i)
+            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
+                    ', Pais: '+airport['Country'])
+            i+=1
+    else:
+        airport = lt.getElement(lista,1)
+        print('1. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
+                    ', Pais: '+airport['Country'])
+
+def printUltimos3(lista):
+    tamanho = lt.size(lista)
+    if tamanho >= 3:
+        i=tamanho-2
+        while i <= tamanho:
+            airport = lt.getElement(lista,i)
+            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
+                    ', Pais: '+airport['Country'])
+            i+=1
+    elif tamanho == 2:
+        i=tamanho-1
+        while i<=tamanho:
+            airport = lt.getElement(lista,i)
+            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
+                    ', Pais: '+airport['Country'])
+            i+=1
+    else:
+        airport = lt.getElement(lista,1)
+        print('1. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
+                    ', Pais: '+airport['Country'])
+
+
+
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -141,9 +186,17 @@ def optionSeven(cont):
     print('Total aeropuertos en el Grafo No Dirigido: '+str(aeropuertos2))
     print('Total rutas aéreas en Grafo No Dirigido: '+str(rutas2))
     print('\nRemoviendo el aeropuerto con código IATA: '+codigoCerrado)
+    print('\nEn el Digrafo:')
+    print('Número resultante de aeropuertos: '+str(gr.numVertices(total[0]))+' y Rutas aéreas: '+str(gr.numEdges(total[0])))
+    print('\nEn el Grafo No Dirigido: ')
+    print('Número resultante de aeropuertos: '+str(gr.numVertices(total[2]))+' y Rutas aéreas: '+str(gr.numEdges(total[2])))
+
+    print('\nHay '+str(lt.size(total[1]))+' aeropuertos afectados por el cierre de: '+codigoCerrado)
+    print('Los primeros son:')
+    printPrimeros3(total[1])
+    print('Los últimos son: ')
+    printUltimos3(total[1])
     
-
-
 
 """
 Menu principal

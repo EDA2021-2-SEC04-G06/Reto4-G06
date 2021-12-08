@@ -415,5 +415,22 @@ def req5(analyzer, codigoCerrado):
                     addList = {'IATA':aeropuertoAfectado, 'Name':valores['Name'], 'City':valores['City'],
                             'Country':valores['Country']}
                     lt.addLast(listaAeropuertoAfectado,addList)
+
+    grafoNoDirigido = analyzer['grafoNoDirigido']
+    nuevoGrafoNoDirigido = gr.newGraph(datastructure='ADJ_LIST',
+                                      directed=False, size=9076,
+                                      comparefunction=compareIATA)
+    listaVerticesGrafoNoDirigido = gr.vertices(grafoNoDirigido)
+    listaArcosGrafoNoDirigido = gr.edges(grafoNoDirigido)
+
+    for vertice in lt.iterator(listaVerticesGrafoNoDirigido):
+        if vertice != codigoCerrado:
+            gr.insertVertex(nuevoGrafoNoDirigido,vertice)
+
+    for arco in lt.iterator(listaArcosGrafoNoDirigido):
+        if arco['vertexA'] != codigoCerrado and arco['vertexB'] != codigoCerrado:
+            gr.addEdge(nuevoGrafoNoDirigido,arco['vertexA'],arco['vertexB'],float(arco['weight']))
+
+
     
-    return nuevoDigrafo, listaAeropuertoAfectado
+    return nuevoDigrafo, listaAeropuertoAfectado, nuevoGrafoNoDirigido
