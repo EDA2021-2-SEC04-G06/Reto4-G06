@@ -266,24 +266,29 @@ def req2(analyzer,codigoIATA1,codigoIATA2):
     return componentesFuertementeMapa, conectados, nombreAeropuerto1, nombreAeropuerto2
 
 def req3(analyzer, ciudadOrigen, ciudadDestino):
-    cities = analyzer['arrayCiudades']
-    i = 0
-    while i <= lt.size(cities):
-        tempList = lt.newList(datastructure='ARRAY_LIST')
-        city = lt.getElement(cities, i)
-        pos = lt.isPresent(cities, city)
-        lt.addLast(tempList, city)
-        while pos != 0:
-            lt.deleteElement(cities, pos)
-            pos = lt.isPresent(cities, city)
-            city = lt.getElement(cities, pos)
-            lt.addLast(tempList, city)
+    ciudadesOrigen = mp.get(analyzer['mapCiudades'], ciudadOrigen)
+    valuesOrigen = me.getValue(ciudadesOrigen)
+    print('\nPara la Ciudad de Origen: '+ciudadOrigen)
+    i = 1
+    for ciudad in lt.iterator(valuesOrigen[ciudadOrigen]):
+        print(str(i) + '. Pais: '+ ciudad['country'] + ', Nombre Administrativo: ' + ciudad['admin_name'] + 
+                ', Capital: ' + ciudad['capital'] + ', Latitud: ' + ciudad['lat'] + ', Longitud: ' +ciudad['lng'])
+        i+=1
+    numeroCiudadOrigen = input('Seleccione el número de la ciudad: ')
 
-        mp.put(analyzer['mapaCiudades'], city, tempList)
-        i += 1
+    print('\nPara la Ciudad de Destino: '+ciudadDestino)
+    ciudadesDestino = mp.get(analyzer['mapCiudades'], ciudadDestino)
+    valuesDestino = me.getValue(ciudadesDestino)
+    i=1
+    for ciudad in lt.iterator(valuesDestino[ciudadDestino]):
+        print(str(i) + '. Pais: '+ ciudad['country'] + ', Nombre Administrativo: ' + ciudad['admin_name'] + 
+                ', Capital: ' + ciudad['capital'] + ', Latitud: ' + ciudad['lat'] + ', Longitud: ' +ciudad['lng'])
+        i+=1
 
-    print(mp.get(analyzer['mapaCiudades'], 'Salamanca'))
+    numeroCiudadDestino = input('Seleccione el número de la ciudad: ')
 
+
+    
 def req4(analyzer, codigoOrigen, millasViajero):
     x = bf.BellmanFord(analyzer['digrafo'],codigoOrigen)
     print(x)
