@@ -47,6 +47,11 @@ def print5aeropuertos(lista):
                 ', IATA: '+airport['IATA']+', Conexiones: '+str(airport['conexiones']))
         i+=1
 
+def printCamino(lista):
+    for camino in lt.iterator(lista):
+        texto = camino['vertexA']+' - '+camino['vertexB']
+        print(texto + ', Distancia: '+ str(camino['weight'])+' (km)')
+
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -89,15 +94,13 @@ def optionTwo(cont):
 def optionThree(cont):
     total = controller.req1(cont)
     print('\nPara el Digrafo: ')
-    print('Áeropuertos conectados en la red: ' + str(lt.size(total[0])))
-    print('Los 5 áeropuertos mas conectados son: ')
+    print('Aeropuertos conectados en la red: ' + str(lt.size(total[0])))
+    print('Los 5 aeropuertos mas conectados son: ')
     print5aeropuertos(total[0])
 
-    
-
 def optionFour(cont):
-    codigoIATA1 = input('Ingrese el código IATA del primer áeropuerto: ')
-    codigoIATA2 = input('Ingrese el código IATA del segundo áeropuerto: ')
+    codigoIATA1 = input('Ingrese el código IATA del primer aeropuerto: ')
+    codigoIATA2 = input('Ingrese el código IATA del segundo aeropuerto: ')
     total = controller.req2(cont, codigoIATA1, codigoIATA2)
     print('\nNúmero total de clústeres presentes en la red de transporte aéreo: ' + str(total[0]['components']))
     print('¿Estan '+total[2]+' ('+codigoIATA1+') y '+ total[3]+' ('+codigoIATA2+') conectados?: '+str(total[1]))
@@ -106,11 +109,19 @@ def optionFour(cont):
 def optionFive(cont):
     ciudadOrigen = input('Ingrese el nombre de la ciudad de origen: ')
     ciudadDestino = input('Ingrese el nombre de la ciudad de destino: ')
-    controller.req3(cont, ciudadOrigen, ciudadDestino)
-
+    total = controller.req3(cont, ciudadOrigen, ciudadDestino)
+    print('\nEl aeropuerto de salida en la ciudad de '+ciudadOrigen+' es:')
+    print('IATA: ' + total[0]['IATA'] +', Nombre: ' + total[0]['Name'] +', Ciudad: ' + total[0]['City']+', Pais: '+total[0]['Country'])
+    print('\nEl aeropuerto de llegada en la ciudad de '+ciudadDestino+' es:')
+    print('IATA: ' + total[1]['IATA'] +', Nombre: ' + total[1]['Name'] +', Ciudad: ' + total[1]['City']+', Pais: '+total[1]['Country'])
+    print('\nDetalles de Vuelo:')
+    print('Distancia Total: '+ str(total[2])+' (km)')
+    print('Ruta:')
+    printCamino(total[3])
+    print('Distancia con Distancia Terrestre: '+str(round(total[4],3))+' (km)')
 
 def optionSix(cont):
-    codigoOrigen = input('Ingrese el código IATA del áeropuerto de origen: ')
+    codigoOrigen = input('Ingrese el código IATA del aeropuerto de origen: ')
     millasViajero = input('Ingrese las millas disponibles: ')
     total = controller.req4(cont,codigoOrigen,millasViajero)
 

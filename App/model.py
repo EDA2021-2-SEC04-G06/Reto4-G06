@@ -26,6 +26,7 @@
 
 
 from math import e
+from haversine import haversine
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -50,6 +51,7 @@ los mismos.
 def newAnalyzer():
     analyzer = {'listaCiudades':None,
                 'listaAeropuertos':None,
+                'mapaAeroPuertosPorPais':None,
                 'mapaAeropuertos': None,
                 'mapaCiudades': None,
                 'mapCiudades':None,
@@ -62,6 +64,8 @@ def newAnalyzer():
     analyzer['listaAeropuertos'] = lt.newList(datastructure='ARRAY_LIST')
 
     analyzer['arrayCiudades'] = lt.newList(datastructure='ARRAY_LIST')
+
+    analyzer['mapaAeropuertosPorPais'] = mp.newMap(maptype='PROBING',comparefunction=compareMapCountry)
 
     analyzer['mapaAeropuertosPorCiudadyPais'] = mp.newMap(maptype='PROBING',comparefunction=compareMapCity)
 
@@ -124,9 +128,11 @@ def addAirport(analyzer,airport):
     lt.addLast(analyzer['listaAeropuertos'],airport)
     iatas = analyzer['mapaAeropuertosPorIATA']
     ciudades = analyzer['mapaAeropuertosPorCiudadyPais']
+    paises = analyzer['mapaAeropuertosPorPais']
     iata = airport['IATA']
     ciudad =airport['City']
-
+    pais = airport['Country']
+    
     mp.put(iatas, iata, airport)
 
     existCiudad = mp.contains(ciudades,ciudad)
@@ -140,9 +146,24 @@ def addAirport(analyzer,airport):
         lt.addLast(ciudadAeroFinal[ciudad],airport)
         mp.put(ciudades,ciudad,ciudadAeroFinal)
 
+    existCountry = mp.contains(paises, pais)
+    if existCountry:
+        entry = mp.get(paises, pais)
+        paisAeroFinal = me.getValue(entry)
+        lt.addLast(paisAeroFinal,airport)
+        
+    else:
+        paisAeroFinal = newCountry(airport)
+        mp.put(paises,pais,paisAeroFinal)
+
 def newCity2(ciudad):
     entry = {ciudad:None}
     entry[ciudad] = lt.newList(datastructure='ARRAY_LIST')
+    return entry
+
+def newCountry(airport):
+    entry = lt.newList(datastructure='ARRAY_LIST')
+    lt.addLast(entry,airport)
     return entry
 
 def addInfoGrafoNoDirigido(analyzer):
@@ -221,6 +242,14 @@ def sortbyConexiones(airport1,airport2):
     else: 
         return 0
 
+def sortbyDistance(airport1,airport2):
+    distancia1 = airport1['distancia']
+    distancia2 = airport2['distancia']
+    if distancia1 < distancia2:
+        return 1
+    else:
+        return 0
+
 # Funciones de ordenamiento
 
 def req1(analyzer):
@@ -266,38 +295,79 @@ def req2(analyzer,codigoIATA1,codigoIATA2):
     return componentesFuertementeMapa, conectados, nombreAeropuerto1, nombreAeropuerto2
 
 def req3(analyzer, ciudadOrigen, ciudadDestino):
-    ciudadesOrigen = mp.get(analyzer['mapaAeropuertosPorCiudadyPais'], ciudadOrigen)
+    ciudadesOrigen = mp.get(analyzer['mapCiudades'], ciudadOrigen)
     valuesOrigen = me.getValue(ciudadesOrigen)
     listaOrigen = valuesOrigen[ciudadOrigen]
     print('\nPara la Ciudad de Origen: '+ciudadOrigen)
     i = 1
     for ciudad in lt.iterator(listaOrigen):
-        print(str(i) + '. Pais: '+ ciudad['Country'] + ', IATA: ' + ciudad['IATA'] + ', Latitud: ' + 
-                        ciudad['Latitude'] + ', Longitud: ' +ciudad['Longitude'])
+        print(str(i) + '. Pais: '+ ciudad['country'] + ', Nombre Admin: ' + ciudad['admin_name'] + ', Latitud: ' + 
+                        ciudad['lat'] + ', Longitud: ' +ciudad['lng'])
         i+=1
-    numeroCiudadOrigen = int(input('Seleccione el número de la ciudad: '))
+    numeroCiudadOrigen = int(input('\nSeleccione el número de la ciudad: '))
 
     print('\nPara la Ciudad de Destino: '+ciudadDestino)
-    ciudadesDestino = mp.get(analyzer['mapaAeropuertosPorCiudadyPais'], ciudadDestino)
+    ciudadesDestino = mp.get(analyzer['mapCiudades'], ciudadDestino)
     valuesDestino = me.getValue(ciudadesDestino)
     listaDestino = valuesDestino[ciudadDestino]
     i=1
     for ciudad in lt.iterator(listaDestino):
-        print(str(i) + '. Pais: '+ ciudad['Country'] + ', IATA: ' + ciudad['IATA'] + ', Latitud: ' + 
-                        ciudad['Latitude'] + ', Longitud: ' +ciudad['Longitude'])
+        print(str(i) + '. Pais: '+ ciudad['country'] + ', Nombre Admin: ' + ciudad['admin_name'] + ', Latitud: ' + 
+                        ciudad['lat'] + ', Longitud: ' +ciudad['lng'])
         i+=1
 
-    numeroCiudadDestino = int(input('Seleccione el número de la ciudad: '))
+    numeroCiudadDestino = int(input('\nSeleccione el número de la ciudad: '))
 
     infoOrigen = lt.getElement(listaOrigen,numeroCiudadOrigen)
     infoDestino = lt.getElement(listaDestino,numeroCiudadDestino)
 
-    IATAOrigen = infoOrigen['IATA']
-    IATADestino = infoDestino['IATA']
+    paisOrigen = infoOrigen['country']
+    paisDestino = infoDestino['country']
 
-    x = dijsktra.Dijkstra(analyzer['digrafo'],IATAOrigen)
-    distancia = dijsktra.distTo(x, IATADestino)
-    print(distancia)
+    origenLatLng = (float(infoOrigen['lat']),float(infoOrigen['lng']))
+    destinoLatLng = (float(infoDestino['lat']),float(infoDestino['lng']))
+
+    aeropuertosEnPaisOrigen = mp.get(analyzer['mapaAeropuertosPorPais'],paisOrigen)
+    aeropuertosEnPaisDestino = mp.get(analyzer['mapaAeropuertosPorPais'],paisDestino)
+
+    listaAeropuertosOrigen = me.getValue(aeropuertosEnPaisOrigen)
+    listaAeropuertosDestino = me.getValue(aeropuertosEnPaisDestino)
+
+    listaOrigen = lt.newList(datastructure='ARRAY_LIST')
+    listaDestino = lt.newList(datastructure='ARRAY_LIST')
+
+    for aeropuerto in lt.iterator(listaAeropuertosOrigen):
+        coordenandas = (float(aeropuerto['Latitude']),float(aeropuerto['Longitude']))
+        iata = aeropuerto['IATA']
+        harvensiano = haversine(coordenandas,origenLatLng)
+        listaAdd = {'IATA':iata, 'distancia':harvensiano}
+        lt.addLast(listaOrigen,listaAdd)
+
+    for aeropuerto in lt.iterator(listaAeropuertosDestino):
+        coordenandas = (float(aeropuerto['Latitude']),float(aeropuerto['Longitude']))
+        iata = aeropuerto['IATA']
+        harvensiano = haversine(coordenandas,destinoLatLng)
+        listaAdd = {'IATA':iata, 'distancia':harvensiano}
+        lt.addLast(listaDestino,listaAdd)
+
+    sortOrigen = sm.sort(listaOrigen,sortbyDistance)
+    sortDestino = sm.sort(listaDestino,sortbyDistance)
+
+    finalOrigen = lt.getElement(sortOrigen,1)
+    finalDestino = lt.getElement(sortDestino,1)
+
+    infoOrigenFinal = mp.get(analyzer['mapaAeropuertosPorIATA'],finalOrigen['IATA'])
+    infoDestinoFinal = mp.get(analyzer['mapaAeropuertosPorIATA'],finalDestino['IATA'])
+    valuesOrigenFinal = me.getValue(infoOrigenFinal)
+    valuesDestinoFinal = me.getValue(infoDestinoFinal)
+
+    x = dijsktra.Dijkstra(analyzer['digrafo'],finalOrigen['IATA'])
+    distanciaRuta = dijsktra.distTo(x, finalDestino['IATA'])
+    camino = dijsktra.pathTo(x,finalDestino['IATA'])
+    
+    distanciaTotal = distanciaRuta + float(finalOrigen['distancia']) + float(finalDestino['distancia'])
+
+    return valuesOrigenFinal, valuesDestinoFinal, distanciaRuta, camino, distanciaTotal
 
 
 def req4(analyzer, codigoOrigen, millasViajero):

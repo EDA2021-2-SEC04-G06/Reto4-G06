@@ -76,7 +76,7 @@ def req2(analyzer, codigoIATA1, codigoIATA2):
 
 
 def req3(analyzer, ciudadOrigen, ciudadDestino):
-    model.req3(analyzer, ciudadOrigen, ciudadDestino)
+    return model.req3(analyzer, ciudadOrigen, ciudadDestino)
 
 def req4(analyzer,codigoOrigen, millasViajero):
     return model.req4(analyzer,codigoOrigen, millasViajero)
