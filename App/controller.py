@@ -61,6 +61,8 @@ def loadData(analyzer, airportsfile, routesfile, citiesfile):
     for ruta in inputFileRoutes:
         model.addRutaConexion(analyzer, ruta)
 
+    model.addInfoGrafoNoDirigido(analyzer)
+
 
 # Funciones de ordenamiento
 

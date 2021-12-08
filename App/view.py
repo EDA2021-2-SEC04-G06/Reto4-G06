@@ -78,14 +78,21 @@ def optionTwo(cont):
     print('Total aeropuertos en el Digrafo: '+str(aeropuertos))
     print('Total rutas aéreas en Digrafo: '+str(rutas))
 
+    aeropuertos2 = (gr.numVertices(cont['grafoNoDirigido']))
+    rutas2 = (gr.numEdges(cont['grafoNoDirigido']))
+    print('\nTotal aeropuertos en el Digrafo: '+str(aeropuertos2))
+    print('Total rutas aéreas en Digrafo: '+str(rutas2))
+
     print('\nTotal de Ciudades: ' + str(lt.size(cont['listaCiudades'])))
     printTotalCiudades(cont['listaCiudades'])
 
 def optionThree(cont):
     total = controller.req1(cont)
-    print('\nÁeropuertos conectados en la red: ' + str(lt.size(total)))
+    print('\nPara el Digrafo: ')
+    print('Áeropuertos conectados en la red: ' + str(lt.size(total[0])))
     print('Los 5 áeropuertos mas conectados son: ')
-    print5aeropuertos(total)
+    print5aeropuertos(total[0])
+
     
 
 def optionFour(cont):

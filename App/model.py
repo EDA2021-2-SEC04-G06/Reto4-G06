@@ -75,9 +75,9 @@ def newAnalyzer():
                                       directed=True, size=9076,
                                       comparefunction=compareIATA)
 
-    '''analyzer['grafoDirigido'] = gr.newGraph(datastructure='ADJ_LIST',
-                                            directed=False,
-                                            size=)'''
+    analyzer['grafoNoDirigido'] = gr.newGraph(datastructure='ADJ_LIST',
+                                            directed=False,size=9076,
+                                            comparefunction=compareIATA)
     return analyzer
 
 # Funciones para agregar informacion al catalogo
@@ -87,6 +87,8 @@ def addVertex(analyzer, airport):
     iata = airport['IATA']
     if not gr.containsVertex(analyzer['digrafo'], iata):
         gr.insertVertex(analyzer['digrafo'], iata)
+    if not gr.containsVertex(analyzer['grafoNoDirigido'], iata):
+        gr.insertVertex(analyzer['grafoNoDirigido'], iata)
     return analyzer
 
 
@@ -143,8 +145,18 @@ def newCity2(ciudad):
     entry[ciudad] = lt.newList(datastructure='ARRAY_LIST')
     return entry
 
-
-
+def addInfoGrafoNoDirigido(analyzer):
+    lista = gr.edges(analyzer['digrafo'])
+    for arco in lt.iterator(lista):
+        verticeA = arco['vertexA'] 
+        verticeB = arco['vertexB']
+        comparacion = gr.getEdge(analyzer['digrafo'],verticeB,verticeA)
+        if comparacion:
+            comparacion2 = gr.getEdge(analyzer['grafoNoDirigido'],verticeB,verticeA)
+            comparacion3 = gr.getEdge(analyzer['grafoNoDirigido'],verticeA,verticeB)
+            if comparacion2 == None and comparacion3 == None:
+                gr.addEdge(analyzer['grafoNoDirigido'],verticeA,verticeB,arco['weight'])
+                
 
 def addCity(analyzer, ciudades):
     city = ciudades['city_ascii']
@@ -224,8 +236,21 @@ def req1(analyzer):
             addList = {'IATA':codigo, 'ciudad':valores['City'], 'pais':valores['Country'],'name':valores['Name'],'conexiones':conexiones}
             lt.addLast(nuevaList,addList)
 
+    listaVertex2 = gr.vertices(analyzer['grafoNoDirigido'])
+    nuevaList2 = lt.newList(datastructure='ARRAY_LIST')
+    for codigo in lt.iterator(listaVertex2):
+        outbound = gr.outdegree(analyzer['grafoNoDirigido'],codigo)
+        inbound = gr.indegree(analyzer['grafoNoDirigido'],codigo)
+        conexiones = inbound + outbound
+        if conexiones != 0:
+            airport = mp.get(analyzer['mapaAeropuertosPorIATA'],codigo)
+            valores = me.getValue(airport)
+            addList = {'IATA':codigo, 'ciudad':valores['City'], 'pais':valores['Country'],'name':valores['Name'],'conexiones':conexiones}
+            lt.addLast(nuevaList2,addList)
+
     sortedList=sm.sort(nuevaList,sortbyConexiones)
-    return sortedList
+    sortdeList2 = sm.sort(nuevaList2,sortbyConexiones)
+    return sortedList, sortdeList2
     
     
 
