@@ -31,10 +31,11 @@ import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
-from DISClib.ADT.graph import gr
-from DISClib.Algorithms.Graphs import bfs as bfs
+from DISClib.ADT.graph import gr, vertices
+from DISClib.Algorithms.Graphs import dfs as dfs
 from DISClib.Algorithms.Graphs import scc as scc
 from DISClib.Algorithms.Graphs import bellmanford as bf
+from DISClib.Algorithms.Graphs import prim as prim
 from DISClib.Algorithms.Graphs import dijsktra as dijsktra
 from DISClib.Algorithms.Graphs import cycles as cycles
 from DISClib.Algorithms.Sorting import mergesort as sm
@@ -250,6 +251,7 @@ def sortbyDistance(airport1,airport2):
     else:
         return 0
 
+
 # Funciones de ordenamiento
 
 def req1(analyzer):
@@ -371,5 +373,47 @@ def req3(analyzer, ciudadOrigen, ciudadDestino):
 
 
 def req4(analyzer, codigoOrigen, millasViajero):
-    x = bf.BellmanFord(analyzer['digrafo'],codigoOrigen)
-    print(x)
+    mst = prim.PrimMST(analyzer['grafoNoDirigido'])
+    edgesto = prim.edgesMST(analyzer['grafoNoDirigido'],mst)
+    
+def req5(analyzer, codigoCerrado):
+    digrafo = analyzer['digrafo']
+    nuevoDigrafo = gr.newGraph(datastructure='ADJ_LIST',
+                                      directed=True, size=9076,
+                                      comparefunction=compareIATA)
+    listaVerticesDigrafo = gr.vertices(digrafo)
+    listaArcosDigrafo = gr.edges(digrafo)
+
+    listaAeropuertoAfectado = lt.newList(datastructure='ARRAY_LIST')
+    mapaComparacion = mp.newMap(maptype='PROBING',comparefunction=compareMapIATA)
+
+    for vertice in lt.iterator(listaVerticesDigrafo):
+        if vertice != codigoCerrado:
+            gr.insertVertex(nuevoDigrafo,vertice)
+
+    for arco in lt.iterator(listaArcosDigrafo):
+        if arco['vertexA'] != codigoCerrado and arco['vertexB'] != codigoCerrado:
+            gr.addEdge(nuevoDigrafo,arco['vertexA'],arco['vertexB'],float(arco['weight']))
+        else:
+            if arco['vertexA'] == codigoCerrado:
+                aeropuertoAfectado = arco['vertexB']
+                existIATA = mp.contains(mapaComparacion, aeropuertoAfectado)
+                if existIATA == False:
+                    mp.put(mapaComparacion,aeropuertoAfectado,0)
+                    infoAeropuertoAfectado = mp.get(analyzer['mapaAeropuertosPorIATA'],aeropuertoAfectado)
+                    valores = me.getValue(infoAeropuertoAfectado)
+                    addList = {'IATA':aeropuertoAfectado, 'Name':valores['Name'], 'City':valores['City'],
+                            'Country':valores['Country']}
+                    lt.addLast(listaAeropuertoAfectado,addList)
+            else:
+                aeropuertoAfectado = arco['vertexA']
+                existIATA = mp.contains(mapaComparacion, aeropuertoAfectado)
+                if existIATA == False:
+                    mp.put(mapaComparacion,aeropuertoAfectado,0)
+                    infoAeropuertoAfectado = mp.get(analyzer['mapaAeropuertosPorIATA'],aeropuertoAfectado)
+                    valores = me.getValue(infoAeropuertoAfectado)
+                    addList = {'IATA':aeropuertoAfectado, 'Name':valores['Name'], 'City':valores['City'],
+                            'Country':valores['Country']}
+                    lt.addLast(listaAeropuertoAfectado,addList)
+    
+    return nuevoDigrafo, listaAeropuertoAfectado

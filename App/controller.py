@@ -80,3 +80,6 @@ def req3(analyzer, ciudadOrigen, ciudadDestino):
 
 def req4(analyzer,codigoOrigen, millasViajero):
     return model.req4(analyzer,codigoOrigen, millasViajero)
+
+def req5(analyzer,codigoCerrado):
+    return model.req5(analyzer, codigoCerrado)

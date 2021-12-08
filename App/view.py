@@ -85,8 +85,8 @@ def optionTwo(cont):
 
     aeropuertos2 = (gr.numVertices(cont['grafoNoDirigido']))
     rutas2 = (gr.numEdges(cont['grafoNoDirigido']))
-    print('\nTotal aeropuertos en el Digrafo: '+str(aeropuertos2))
-    print('Total rutas aéreas en Digrafo: '+str(rutas2))
+    print('\nTotal aeropuertos en el Grafo No Dirigido: '+str(aeropuertos2))
+    print('Total rutas aéreas en Grafo No Dirigido: '+str(rutas2))
 
     print('\nTotal de Ciudades: ' + str(lt.size(cont['listaCiudades'])))
     printTotalCiudades(cont['listaCiudades'])
@@ -127,7 +127,22 @@ def optionSix(cont):
 
 
 def optionSeven(cont):
-    ''''''
+    codigoCerrado = input('Ingrese el código IATA del aeropuerto cerrado: ')
+    total = controller.req5(cont,codigoCerrado)
+    print('\nCerrando el aeropuerto con código IATA: '+codigoCerrado)
+    print('\nEn el Digrafo original:')
+    aeropuertos = (gr.numVertices(cont['digrafo']))
+    rutas = (gr.numEdges(cont['digrafo']))
+    print('Total aeropuertos en el Digrafo: '+str(aeropuertos))
+    print('Total rutas aéreas en Digrafo: '+str(rutas))
+    print('\nEn el Grafo No Dirigido: ')
+    aeropuertos2 = (gr.numVertices(cont['grafoNoDirigido']))
+    rutas2 = (gr.numEdges(cont['grafoNoDirigido']))
+    print('Total aeropuertos en el Grafo No Dirigido: '+str(aeropuertos2))
+    print('Total rutas aéreas en Grafo No Dirigido: '+str(rutas2))
+    print('\nRemoviendo el aeropuerto con código IATA: '+codigoCerrado)
+    
+
 
 
 """
