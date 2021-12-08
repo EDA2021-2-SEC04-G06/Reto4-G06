@@ -33,7 +33,10 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.ADT.graph import gr
 from DISClib.Algorithms.Graphs import bfs as bfs
 from DISClib.Algorithms.Graphs import scc as scc
-from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Graphs import bellmanford as bf
+from DISClib.Algorithms.Graphs import dijsktra as dijsktra
+from DISClib.Algorithms.Graphs import cycles as cycles
+from DISClib.Algorithms.Sorting import mergesort as sm
 assert cf
 
 """
@@ -90,7 +93,7 @@ def addVertex(analyzer, airport):
 def addRutaConexion(analyzer, ruta):
     origen = ruta['Departure']
     llegada = ruta['Destination']
-    distancia = ruta['distance_km']
+    distancia = float(ruta['distance_km'])
     gr.addEdge(analyzer['digrafo'], origen, llegada, distancia)
 
 def addCiudad(analyzer, city):
@@ -197,11 +200,34 @@ def compareMapCity(keyCity, cities):
     else:
         return -1
 
+def sortbyConexiones(airport1,airport2):
+    conexiones1 = airport1['conexiones']
+    conexiones2 = airport2['conexiones']
+
+    if conexiones1 > conexiones2:
+        return 1
+    else: 
+        return 0
+
 # Funciones de ordenamiento
 
 def req1(analyzer):
-    x=bfs.BreadhtFisrtSearch(analyzer['digrafo'],'UUS')
-    return x
+    listaVertex = gr.vertices(analyzer['digrafo'])
+    nuevaList = lt.newList(datastructure='ARRAY_LIST')
+    for codigo in lt.iterator(listaVertex):
+        outbound = gr.outdegree(analyzer['digrafo'],codigo)
+        inbound = gr.indegree(analyzer['digrafo'],codigo)
+        conexiones = inbound + outbound
+        if conexiones != 0:
+            airport = mp.get(analyzer['mapaAeropuertosPorIATA'],codigo)
+            valores = me.getValue(airport)
+            addList = {'IATA':codigo, 'ciudad':valores['City'], 'pais':valores['Country'],'name':valores['Name'],'conexiones':conexiones}
+            lt.addLast(nuevaList,addList)
+
+    sortedList=sm.sort(nuevaList,sortbyConexiones)
+    return sortedList
+    
+    
 
 def req2(analyzer,codigoIATA1,codigoIATA2):
     componentesFuertementeMapa = scc.KosarajuSCC(analyzer['digrafo'])
@@ -232,3 +258,7 @@ def req3(analyzer, ciudadOrigen, ciudadDestino):
         i += 1
 
     print(mp.get(analyzer['mapaCiudades'], 'Salamanca'))
+
+def req4(analyzer, codigoOrigen, millasViajero):
+    x = bf.BellmanFord(analyzer['digrafo'],codigoOrigen)
+    print(x)

@@ -39,6 +39,14 @@ def printTotalCiudades(lista):
     print('Última Ciudad: '+ str(numerof['city_ascii']) + ' Pais: ' + str(numerof['country']) + ' Latitud: ' +str(numerof['lat']) + 
             ' Longitud: ' + str(numerof['lng']) + ' Población: '+ str(numerof['population']))
 
+def print5aeropuertos(lista):
+    i = 1
+    while i <= 5:
+        airport = lt.getElement(lista,i)
+        print(str(i)+'. Nombre: ' + airport['name']+', Ciudad: '+airport['ciudad']+', Pais: '+airport['pais']+
+                ', IATA: '+airport['IATA']+', Conexiones: '+str(airport['conexiones']))
+        i+=1
+
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -75,9 +83,10 @@ def optionTwo(cont):
 
 def optionThree(cont):
     total = controller.req1(cont)
-    print(total)
-    print(mp.size(total))
-    print(total)
+    print('\nÁeropuertos conectados en la red: ' + str(lt.size(total)))
+    print('Los 5 áeropuertos mas conectados son: ')
+    print5aeropuertos(total)
+    
 
 def optionFour(cont):
     codigoIATA1 = input('Ingrese el código IATA del primer áeropuerto: ')
@@ -94,7 +103,9 @@ def optionFive(cont):
 
 
 def optionSix(cont):
-    ''''''
+    codigoOrigen = input('Ingrese el código IATA del áeropuerto de origen: ')
+    millasViajero = input('Ingrese las millas disponibles: ')
+    total = controller.req4(cont,codigoOrigen,millasViajero)
 
 
 def optionSeven(cont):
