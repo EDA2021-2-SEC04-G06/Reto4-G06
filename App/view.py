@@ -30,71 +30,80 @@ from DISClib.ADT import list as lt
 import threading
 assert cf
 
+
 def printTotalCiudades(lista):
     tamanho = lt.size(lista)
-    numero1 = lt.getElement(lista,1)
-    print('Primera Ciudad: '+ str(numero1['city_ascii']) + ' Pais: ' + str(numero1['country']) + ' Latitud: ' +str(numero1['lat']) + 
-            ' Longitud: ' + str(numero1['lng']) + ' Población: '+ str(numero1['population']))
-    numerof = lt.getElement(lista,tamanho)
-    print('Última Ciudad: '+ str(numerof['city_ascii']) + ' Pais: ' + str(numerof['country']) + ' Latitud: ' +str(numerof['lat']) + 
-            ' Longitud: ' + str(numerof['lng']) + ' Población: '+ str(numerof['population']))
+    numero1 = lt.getElement(lista, 1)
+    print('Primera Ciudad: ' + str(numero1['city_ascii']) + ' Pais: ' + str(numero1['country']) + ' Latitud: ' + str(numero1['lat']) +
+          ' Longitud: ' + str(numero1['lng']) + ' Población: ' + str(numero1['population']))
+    numerof = lt.getElement(lista, tamanho)
+    print('Última Ciudad: ' + str(numerof['city_ascii']) + ' Pais: ' + str(numerof['country']) + ' Latitud: ' + str(numerof['lat']) +
+          ' Longitud: ' + str(numerof['lng']) + ' Población: ' + str(numerof['population']))
+
 
 def print5aeropuertos(lista):
     i = 1
     while i <= 5:
-        airport = lt.getElement(lista,i)
-        print(str(i)+'. Nombre: ' + airport['name']+', Ciudad: '+airport['ciudad']+', Pais: '+airport['pais']+
-                ', IATA: '+airport['IATA']+', Conexiones: '+str(airport['conexiones']))
-        i+=1
+        airport = lt.getElement(lista, i)
+        print(str(i)+'. Nombre: ' + airport['name']+', Ciudad: '+airport['ciudad']+', Pais: '+airport['pais'] +
+              ', IATA: '+airport['IATA']+', Conexiones: '+str(airport['conexiones']))
+        i += 1
+
 
 def printCamino(lista):
     for camino in lt.iterator(lista):
         texto = camino['vertexA']+' - '+camino['vertexB']
-        print(texto + ', Distancia: '+ str(camino['weight'])+' (km)')
+        print(texto + ', Distancia: ' + str(camino['weight'])+' (km)')
+
 
 def printPrimeros3(lista):
     tamanho = lt.size(lista)
-    
+
     if tamanho >= 3:
-        i=1
-        while i<=3:
-            airport = lt.getElement(lista,i)
-            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
-                    ', Pais: '+airport['Country'])
-            i+=1
+        i = 1
+        while i <= 3:
+            airport = lt.getElement(lista, i)
+            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City'] +
+                  ', Pais: '+airport['Country'])
+            i += 1
     elif tamanho == 2:
-        i=2
-        while i<=3:
-            airport = lt.getElement(lista,i)
-            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
-                    ', Pais: '+airport['Country'])
-            i+=1
+        i = 2
+        while i <= 3:
+            airport = lt.getElement(lista, i)
+            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City'] +
+                  ', Pais: '+airport['Country'])
+            i += 1
     else:
-        airport = lt.getElement(lista,1)
-        print('1. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
-                    ', Pais: '+airport['Country'])
+        airport = lt.getElement(lista, 1)
+        print('1. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City'] +
+              ', Pais: '+airport['Country'])
+
 
 def printUltimos3(lista):
     tamanho = lt.size(lista)
     if tamanho >= 3:
-        i=tamanho-2
+        i = tamanho-2
         while i <= tamanho:
-            airport = lt.getElement(lista,i)
-            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
-                    ', Pais: '+airport['Country'])
-            i+=1
+            airport = lt.getElement(lista, i)
+            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City'] +
+                  ', Pais: '+airport['Country'])
+            i += 1
     elif tamanho == 2:
-        i=tamanho-1
-        while i<=tamanho:
-            airport = lt.getElement(lista,i)
-            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
-                    ', Pais: '+airport['Country'])
-            i+=1
+        i = tamanho-1
+        while i <= tamanho:
+            airport = lt.getElement(lista, i)
+            print(str(i)+'. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City'] +
+                  ', Pais: '+airport['Country'])
+            i += 1
     else:
-        airport = lt.getElement(lista,1)
-        print('1. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City']+
-                    ', Pais: '+airport['Country'])
+        airport = lt.getElement(lista, 1)
+        print('1. IATA: '+airport['IATA']+', Nombre: '+airport['Name']+', Ciudad: '+airport['City'] +
+              ', Pais: '+airport['Country'])
 
+
+def printorden(lista):
+    for each in lt.iterator(lista):
+        print(each)
 
 
 """
@@ -136,6 +145,7 @@ def optionTwo(cont):
     print('\nTotal de Ciudades: ' + str(lt.size(cont['listaCiudades'])))
     printTotalCiudades(cont['listaCiudades'])
 
+
 def optionThree(cont):
     total = controller.req1(cont)
     print('\nPara el Digrafo: ')
@@ -143,12 +153,15 @@ def optionThree(cont):
     print('Los 5 aeropuertos mas conectados son: ')
     print5aeropuertos(total[0])
 
+
 def optionFour(cont):
     codigoIATA1 = input('Ingrese el código IATA del primer aeropuerto: ')
     codigoIATA2 = input('Ingrese el código IATA del segundo aeropuerto: ')
     total = controller.req2(cont, codigoIATA1, codigoIATA2)
-    print('\nNúmero total de clústeres presentes en la red de transporte aéreo: ' + str(total[0]['components']))
-    print('¿Estan '+total[2]+' ('+codigoIATA1+') y '+ total[3]+' ('+codigoIATA2+') conectados?: '+str(total[1]))
+    print('\nNúmero total de clústeres presentes en la red de transporte aéreo: ' +
+          str(total[0]['components']))
+    print('¿Estan '+total[2]+' ('+codigoIATA1+') y ' +
+          total[3]+' ('+codigoIATA2+') conectados?: '+str(total[1]))
 
 
 def optionFive(cont):
@@ -156,24 +169,35 @@ def optionFive(cont):
     ciudadDestino = input('Ingrese el nombre de la ciudad de destino: ')
     total = controller.req3(cont, ciudadOrigen, ciudadDestino)
     print('\nEl aeropuerto de salida en la ciudad de '+ciudadOrigen+' es:')
-    print('IATA: ' + total[0]['IATA'] +', Nombre: ' + total[0]['Name'] +', Ciudad: ' + total[0]['City']+', Pais: '+total[0]['Country'])
+    print('IATA: ' + total[0]['IATA'] + ', Nombre: ' + total[0]['Name'] +
+          ', Ciudad: ' + total[0]['City']+', Pais: '+total[0]['Country'])
     print('\nEl aeropuerto de llegada en la ciudad de '+ciudadDestino+' es:')
-    print('IATA: ' + total[1]['IATA'] +', Nombre: ' + total[1]['Name'] +', Ciudad: ' + total[1]['City']+', Pais: '+total[1]['Country'])
+    print('IATA: ' + total[1]['IATA'] + ', Nombre: ' + total[1]['Name'] +
+          ', Ciudad: ' + total[1]['City']+', Pais: '+total[1]['Country'])
     print('\nDetalles de Vuelo:')
-    print('Distancia Total: '+ str(total[2])+' (km)')
+    print('Distancia Total: ' + str(total[2])+' (km)')
     print('Ruta:')
     printCamino(total[3])
-    print('Distancia con Distancia Terrestre: '+str(round(total[4],3))+' (km)')
+    print('Distancia con Distancia Terrestre: ' +
+          str(round(total[4], 3))+' (km)')
+
 
 def optionSix(cont):
     codigoOrigen = input('Ingrese el código IATA del aeropuerto de origen: ')
     millasViajero = input('Ingrese las millas disponibles: ')
-    total = controller.req4(cont,codigoOrigen,millasViajero)
+    total = controller.req4(cont, codigoOrigen, millasViajero)
+    print('Numero de nodos conectados al arbol de expansion minima: ' +
+          str(total[0]))
+    print('Distancia en millas disponibles del viajero: '+str(total[1]))
+    print('Costo total del arbol (km): '+str(total[2]))
+    print('Millas Excedentes/Sobrantes: '+str(total[3]))
+    print('Rama mas larga posible: ')
+    printorden(total[4])
 
 
 def optionSeven(cont):
     codigoCerrado = input('Ingrese el código IATA del aeropuerto cerrado: ')
-    total = controller.req5(cont,codigoCerrado)
+    total = controller.req5(cont, codigoCerrado)
     print('\nCerrando el aeropuerto con código IATA: '+codigoCerrado)
     print('\nEn el Digrafo original:')
     aeropuertos = (gr.numVertices(cont['digrafo']))
@@ -187,16 +211,19 @@ def optionSeven(cont):
     print('Total rutas aéreas en Grafo No Dirigido: '+str(rutas2))
     print('\nRemoviendo el aeropuerto con código IATA: '+codigoCerrado)
     print('\nEn el Digrafo:')
-    print('Número resultante de aeropuertos: '+str(gr.numVertices(total[0]))+' y Rutas aéreas: '+str(gr.numEdges(total[0])))
+    print('Número resultante de aeropuertos: ' +
+          str(gr.numVertices(total[0]))+' y Rutas aéreas: '+str(gr.numEdges(total[0])))
     print('\nEn el Grafo No Dirigido: ')
-    print('Número resultante de aeropuertos: '+str(gr.numVertices(total[2]))+' y Rutas aéreas: '+str(gr.numEdges(total[2])))
+    print('Número resultante de aeropuertos: ' +
+          str(gr.numVertices(total[2]))+' y Rutas aéreas: '+str(gr.numEdges(total[2])))
 
-    print('\nHay '+str(lt.size(total[1]))+' aeropuertos afectados por el cierre de: '+codigoCerrado)
+    print('\nHay '+str(lt.size(total[1])) +
+          ' aeropuertos afectados por el cierre de: '+codigoCerrado)
     print('Los primeros son:')
     printPrimeros3(total[1])
     print('Los últimos son: ')
     printUltimos3(total[1])
-    
+
 
 """
 Menu principal
